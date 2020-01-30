@@ -16,12 +16,14 @@ namespace P1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IPizzaRepository _context;
+        private UserManager<IdentityUser> _mgr;
 
 
-        public HomeController(ILogger<HomeController> logger, IPizzaRepository context)
+        public HomeController(ILogger<HomeController> logger, IPizzaRepository context, UserManager<IdentityUser> mgr)
         {
             _logger = logger;
             _context = context;
+            _mgr = mgr;
         }
 
         public IActionResult Index()
@@ -30,13 +32,14 @@ namespace P1.Controllers
             return View(stores);
         }
 
-        [Authorize(Roles ="User,Store")]
+        /*[Authorize(Roles ="User,Store")]
         public IActionResult Orders()
         {
-            var login = _context.GetLogins(this.User.Identity.Name);
-            var orders = _context.GetOrders(login);
+            var id = _mgr.GetUserId(this.User);
+            var login = _context.GetLogins(id);
+            var orders = from order in _context.GetOrders(login) select new OrderView(order);
             return View(orders);
-        }
+        }*/
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

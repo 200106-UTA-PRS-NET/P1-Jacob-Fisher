@@ -132,6 +132,7 @@ namespace Domain
             }
             return new CompletedOrder()
             {
+                Id = orders.Id,
                 Store = Map(orders.Store),
                 User = Map(orders.User),
                 Price = orders.Price,
@@ -165,6 +166,7 @@ namespace Domain
             {
                 var p = new Pizza(o)
                 {
+                    Id = incomplete.PizzaId,
                     Crust = Map(incomplete.Crust),
                     Size = Map(incomplete.SizeNavigation),
                 };
@@ -184,13 +186,21 @@ namespace Domain
             {
                 return null;
             }
+            List < Topping >  toppings = new List<Topping>();
+            foreach(var t in pizza.PizzaToppings)
+            {
+                Topping topp = Map(t.Topping);
+                for(int i=0; i<t.Amount; i++)
+                {
+                    toppings.Add(topp);
+                }
+            }
             return new CompletedPizza()
             {
                 Crust = PizzaMapper.Map(pizza.Crust),
                 Price = pizza.Price,
                 Size = PizzaMapper.Map(pizza.SizeNavigation),
-                Toppings = new List<Topping>((from topping in pizza.PizzaToppings
-                                              select Map(topping.Topping))) //TODO make this right
+                Toppings = toppings
             };
         }
 

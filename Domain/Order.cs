@@ -12,6 +12,7 @@ namespace Domain
         readonly ICollection<IPizza> pizzas;
         decimal price;
         Store store;
+        public long Id { get => -1; }
         public decimal Price { get => price; }
         public IEnumerable<IPizza> Pizzas { get => pizzas; }
 

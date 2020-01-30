@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-P1-6954539F-1FBC-4ABF-8FC0-BA8152987D0C</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Controllers\OrderBuilderController.cs~RFa51189b.TMP" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />

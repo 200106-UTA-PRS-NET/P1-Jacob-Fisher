@@ -7,6 +7,7 @@ namespace Domain.Interfaces
 {
     public interface IOrder
     {
+        public long Id { get; }
         public Store Store { get; }
         public User User { get; }
         [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]

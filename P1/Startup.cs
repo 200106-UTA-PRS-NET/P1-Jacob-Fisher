@@ -39,7 +39,7 @@ namespace P1
             services.AddDbContext<PizzaDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("PizzaDB")));
-            services.AddTransient<IPizzaRepository, PizzaRepository>();
+            services.AddScoped<IPizzaRepository, PizzaRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.Configure<IdentityOptions>(options =>

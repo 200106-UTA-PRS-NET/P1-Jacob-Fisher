@@ -10,6 +10,7 @@ namespace Domain
     {
         private readonly IOrder order;
         private readonly ICollection<Topping> toppings;
+        public int Id { get; set; }
         public Crust Crust { get; set; }
         public Size Size { get; set; }
         public decimal Price => order.Store.Price(this);

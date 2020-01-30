@@ -1,11 +1,11 @@
 ﻿@model IEnumerable<P1.Models.OrderView>
 
 @{
-    ViewData["Title"] = "Orders";
+    ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Orders</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -51,7 +51,7 @@
             </td>
             <td>
                 @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-                @Html.ActionLink("Details", "Details", new { id=item.id}) |
+                @Html.ActionLink("Details", "Details", new { id=item.id })
                 @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
             </td>
         </tr>

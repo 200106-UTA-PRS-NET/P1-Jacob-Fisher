@@ -32,8 +32,9 @@ namespace Testing
         {
             //Checking that there are no nullpos
             var repo = GetRepository(GetContext());
-            repo.GetOrders(new User() { Id = 1 });
-            repo.GetOrders(new Domain.Store() { Id = 2 });
+            var test = repo.GetOrders(new User() { Id = 1 });
+            var test2 = repo.GetOrders(new Domain.Store() { Id = 2 });
+            var test3 = repo.GetOrder( 5, new User() { Id = 1 });
         }
     }
 }

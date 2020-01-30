@@ -10,7 +10,7 @@ namespace Domain
 {
     public class PizzaRepository: IPizzaRepository
     {
-        private PizzaDbContext context;
+        private readonly PizzaDbContext context;
         public PizzaRepository()
         {
 
@@ -48,10 +48,10 @@ namespace Domain
                     .ThenInclude(o => o.Name).Where(o => o.Id == id).FirstOrDefault());
         }
 
-        public Logins GetLogins(string login)
+        public Logins GetLogins(string guid)
         {
             return PizzaMapper.Map(
-                context.Logins.Where(o => o.Aspnetuserguid == context.AspNetUsers.Where(o => o.Email==login).Select(o => o.Id).FirstOrDefault()).Include(o => o.Store).Include(o => o.Users).FirstOrDefault()
+                context.Logins.Where(o => o.Aspnetuserguid == guid).Include(o => o.Store).Include(o => o.Users).FirstOrDefault()
                 );
         }
 
@@ -72,6 +72,52 @@ namespace Domain
                 .Include(o => o.Pizza)
                 .Select(o => PizzaMapper.Map(o));
             }
+        }
+        public IOrder GetOrder(long id, Logins login)
+        {
+            return PizzaMapper.Map(context.Orders
+                .Include(o => o.Store)
+                    .ThenInclude(o => o.IdNavigation)
+                .Include(o => o.User)
+                    .ThenInclude(o => o.IdNavigation)
+                .Include(o => o.Pizza)
+                    .ThenInclude(o => o.PizzaToppings)
+                        .ThenInclude(o => o.Topping)
+                .Include(o => o.Pizza)
+                    .ThenInclude(o => o.Crust)
+                .Include(o => o.Pizza)
+                    .ThenInclude(o => o.SizeNavigation)
+                .Where(o => o.Id == id).Where(o => (o.Storeid == login.Id) || (o.Userid == login.Id)).FirstOrDefault());
+        }
+        public void NewOrder(int userId, int storeId)
+        {
+            CancelOrder(userId);
+            context.Incomplete.Add(new Incomplete() {
+                Userid = userId,
+                Storeid = storeId
+            });
+            context.SaveChanges();
+        }
+        public void CancelOrder(int userId)
+        {
+            Incomplete incomplete = context.Incomplete.Where(o => o.Userid == userId).FirstOrDefault();
+            if(incomplete != null) {
+                context.Remove(incomplete);
+                context.SaveChanges();
+            }
+        }
+
+        public Order GetCurrentOrder(Logins login)
+        {
+            return PizzaMapper.Map(context.Incomplete
+                .Include(o => o.IncompletePizza)
+                    .ThenInclude(o => o.Crust)
+                .Include(o => o.IncompletePizza)
+                    .ThenInclude(o => o.SizeNavigation)
+                .Include(o => o.IncompletePizza)
+                    .ThenInclude(o => o.IncompleteToppings)
+                        .ThenInclude(o => o.Topping)
+                .Where(o => o.Userid == login.Id).FirstOrDefault());
         }
     }
 }

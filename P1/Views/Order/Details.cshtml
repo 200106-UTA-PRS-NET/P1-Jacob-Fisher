@@ -1,0 +1,70 @@
+﻿@model P1.Models.OrderDetailsView
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+<span>
+    @if (User.IsInRole("Store"))
+    {
+        <text>Order by: </text><strong>@Html.DisplayFor(modelItem => Model.User)</strong>
+    }
+    else if (User.IsInRole("User"))
+    {
+        <text>Order from: </text><strong>@Html.DisplayFor(modelItem => Model.Store)</strong>
+    }
+    at <strong>@Html.DisplayFor(modelItem => Model.Ordertime)</strong>
+</span>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pizzas.FirstOrDefault().Size)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pizzas.FirstOrDefault().Crust)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pizzas.FirstOrDefault().Toppings)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pizzas.FirstOrDefault().Price)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Pizzas)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Size)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Crust)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Toppings)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                    <strong>@Html.DisplayFor(modelItem => Model.Price)</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>

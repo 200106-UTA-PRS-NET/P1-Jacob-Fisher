@@ -7,6 +7,7 @@ namespace Domain
 {
     class CompletedOrder : IOrder
     {
+        public long Id { get; set; }
         public decimal Price { get; set;}
 
         public IEnumerable<IPizza> Pizzas { get; set; }

@@ -6,6 +6,7 @@ namespace Domain.Interfaces
 {
     public interface IPizza
     {
+        public int Id { get; }
         public Crust Crust { get; set; }
         public Size Size { get; set; }
         public decimal Price { get; }

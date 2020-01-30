@@ -7,6 +7,7 @@ namespace Domain
 {
     class CompletedPizza : IPizza
     {
+        public int Id { get; set; }
         public Crust Crust { get; set; }
         public Size Size { get; set; }
 
