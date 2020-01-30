@@ -12,6 +12,9 @@ using P1.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Domain.Models;
+using Domain.Interfaces;
+using Domain;
 
 namespace P1
 {
@@ -31,10 +34,14 @@ namespace P1
                 options.UseSqlServer(
                     Configuration.GetConnectionString("PizzaDB")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddDbContext<PizzaDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("PizzaDB")));
+            services.AddTransient<IPizzaRepository, PizzaRepository>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.

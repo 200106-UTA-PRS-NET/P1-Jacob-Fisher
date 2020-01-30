@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Domain.Store>
+﻿@model IEnumerable<Domain.Interfaces.IOrder>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Orders";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Orders</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,7 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ordertime)
             </th>
             <th></th>
         </tr>
@@ -23,7 +26,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ordertime)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
