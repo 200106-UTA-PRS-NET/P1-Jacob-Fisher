@@ -18,5 +18,11 @@ namespace Domain.Interfaces
         IPizza GetCurrentPizza(Logins login, int id);
         void AddPizza(Logins login, IPizza pizza);
         void RemovePizzaFromOrder(Logins login, int pizzaId);
+        IDictionary<short, string> GetPrebuiltNames(Store store);
+        IPizza GetPrebuilt(short id);
+        IDictionary<short, string> GetSizeNames();
+        IDictionary<short, string> GetCrustNames();
+        IDictionary<short, string> GetToppingNames();
+        void UpdatePizza(Logins login, int id, Pizza newPizza);
     }
 }

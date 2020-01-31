@@ -34,6 +34,9 @@ namespace P1.Controllers
             var uid = _mgr.GetUserId(this.User);
             var login = _context.GetLogins(uid);
             Order order = _context.CurrentOrder((User)login);
+            IDictionary<short, string> preBuilts = _context.GetPrebuiltNames(order.Store);
+            preBuilts.Add(0, "Custom");
+            ViewBag.PreBuilts = preBuilts;
             return View(new OrderBuilderView(order));
         }
 
@@ -48,33 +51,43 @@ namespace P1.Controllers
         }
 
         // GET: OrderBuilder/Create
-        public ActionResult Create()
+        public ActionResult Create(short id)
         {
-            var uid = _mgr.GetUserId(this.User);
-            var login = _context.GetLogins(uid);
-            var order = _context.CurrentOrderLazy(login);
-            Pizza pizza = new Pizza(order)
-            {
-                Crust = new Crust() { Id = 1 },
-                Size = new Size() { Id = 1}
-            };
-            pizza.AddTopping(new Topping() { Id = 1 });
-            pizza.AddTopping(new Topping() { Id = 2 });
-            pizza.AddTopping(new Topping() { Id = 1 });
-            _context.AddPizza(login, pizza);
-            return Redirect(nameof(Index));
-            //return View();
+            IDictionary<short, string> sizes = _context.GetSizeNames();
+            IDictionary<short, string> crusts = _context.GetCrustNames();
+            IDictionary<short, string> toppings = _context.GetToppingNames();
+            toppings.Add(0, "None");
+            ViewBag.Sizes = sizes;
+            ViewBag.Crusts = crusts;
+            ViewBag.Toppings = toppings;
+
+            var prebuilt = _context.GetPrebuilt(id);
+            prebuilt.Size = new Size() { Id = 3 };
+            var viewValue = new NumericPizzaView(prebuilt);
+            return View(viewValue);
         }
 
         // POST: OrderBuilder/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(short SizeId, short CrustId, short T1, short T2, short T3, short T4, short T5, IFormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
-
+                var uid = _mgr.GetUserId(this.User);
+                var login = _context.GetLogins(uid);
+                var order = _context.CurrentOrderLazy(login);
+                var newPizza = new Pizza(order)
+                {
+                    Size = new Size() { Id = SizeId },
+                    Crust = new Crust() { Id = CrustId },
+                };
+                if(T1 != 0) newPizza.AddTopping(new Topping() { Id = T1 });
+                if (T2 != 0) newPizza.AddTopping(new Topping() { Id = T2 });
+                if (T3 != 0) newPizza.AddTopping(new Topping() { Id = T3 });
+                if (T4 != 0) newPizza.AddTopping(new Topping() { Id = T4 });
+                if (T5 != 0) newPizza.AddTopping(new Topping() { Id = T5 });
+                _context.AddPizza(login, newPizza);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -86,17 +99,44 @@ namespace P1.Controllers
         // GET: OrderBuilder/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var uid = _mgr.GetUserId(this.User);
+            var login = _context.GetLogins(uid);
+            IDictionary<short, string> sizes = _context.GetSizeNames();
+            IDictionary<short, string> crusts = _context.GetCrustNames();
+            IDictionary<short, string> toppings = _context.GetToppingNames();
+            toppings.Add(0, "None");
+            ViewBag.Sizes = sizes;
+            ViewBag.Crusts = crusts;
+            ViewBag.Toppings = toppings;
+            ViewBag.PizzaId = id;
+
+            var current = _context.GetCurrentPizza(login,id);
+            var viewValue = new NumericPizzaView(current);
+            return View(viewValue);
         }
 
         // POST: OrderBuilder/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, short SizeId, short CrustId, short T1, short T2, short T3, short T4, short T5, IFormCollection collection)
         {
             try
             {
-                // TODO: Add update logic here
+                var uid = _mgr.GetUserId(this.User);
+                var login = _context.GetLogins(uid);
+                var order = _context.CurrentOrderLazy(login);
+                var newPizza = new Pizza(order)
+                {
+                    Size = new Size() { Id = SizeId },
+                    Crust = new Crust() { Id = CrustId },
+                };
+                if (T1 != 0) newPizza.AddTopping(new Topping() { Id = T1 });
+                if (T2 != 0) newPizza.AddTopping(new Topping() { Id = T2 });
+                if (T3 != 0) newPizza.AddTopping(new Topping() { Id = T3 });
+                if (T4 != 0) newPizza.AddTopping(new Topping() { Id = T4 });
+                if (T5 != 0) newPizza.AddTopping(new Topping() { Id = T5 });
+
+                _context.UpdatePizza(login, id, newPizza);
 
                 return RedirectToAction(nameof(Index));
             }

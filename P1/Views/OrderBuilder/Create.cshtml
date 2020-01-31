@@ -1,0 +1,120 @@
+﻿@model P1.Models.NumericPizzaView
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>NumericPizzaView</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <select name="SizeId">
+                @foreach (var item in ViewBag.Sizes)
+                {
+                    if (item.Key == Model.SizeId)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+            <select name="CrustId">
+                @foreach (var item in ViewBag.Crusts)
+                {
+                    if (item.Key == Model.CrustId)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+            <select name="T1">
+                @foreach (var item in ViewBag.Toppings)
+                {
+                    if (item.Key == Model.Topping1)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+            <select name="T2">
+                @foreach (var item in ViewBag.Toppings)
+                {
+                    if (item.Key == Model.Topping2)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+            <select name="T3">
+                @foreach (var item in ViewBag.Toppings)
+                {
+                    if (item.Key == Model.Topping3)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+            <select name="T4">
+                @foreach (var item in ViewBag.Toppings)
+                {
+                    if (item.Key == Model.Topping4)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+            <select name="T5">
+                @foreach (var item in ViewBag.Toppings)
+                {
+                    if (item.Key == Model.Topping5)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

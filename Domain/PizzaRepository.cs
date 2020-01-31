@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Domain
 {
-    public class PizzaRepository: IPizzaRepository
+    public class PizzaRepository : IPizzaRepository
     {
         private readonly PizzaDbContext context;
         public PizzaRepository()
@@ -103,9 +103,9 @@ namespace Domain
         {
             Incomplete incomplete = context.Incomplete
                 .Include(o => o.IncompletePizza)
-                    .ThenInclude(o=>o.IncompleteToppings)
+                    .ThenInclude(o => o.IncompleteToppings)
                 .Where(o => o.Userid == userId).FirstOrDefault();
-            if(incomplete != null) {
+            if (incomplete != null) {
                 context.Remove(incomplete);
                 context.SaveChanges();
             }
@@ -199,6 +199,69 @@ namespace Domain
             {
                 throw new PizzaBoxException("Was unable to place order. This is likely due to the store not having the toppings required to complete your order.");
             }
+        }
+
+        public IDictionary<short, string> GetPrebuiltNames(Store store)
+        {
+            return (from preset in context.Prebuilt
+                    join prebuiltId in from preset in context.Prebuilt1
+                                       where preset.StoreId == store.Id
+                                       select preset.PrebuiltId
+                                        on preset.Id equals prebuiltId
+                    select new { preset.Id, preset.Name }).ToDictionary(t=>t.Id, t=>t.Name);
+        }
+
+        public IPizza GetPrebuilt(short id)
+        {
+            if (id == 0)
+            {
+                var ret = new CompletedPizza()
+                {
+                    Crust = new Crust() { Id = 1},
+                    Toppings = new List<Topping>
+                {
+                    PizzaMapper.Map(context.Topping.Where(t => t.Name == "Sauce").FirstOrDefault()),
+                    PizzaMapper.Map(context.Topping.Where(t => t.Name == "Cheese").FirstOrDefault())
+                }
+            };
+                return ret;
+            }
+            return PizzaMapper.Map(context.Prebuilt
+                .Include(p => p.PrebuiltToppings)
+                    .ThenInclude(p => p.Topping)
+                .Include(p => p.Crust)
+                .FirstOrDefault(t => t.Id == id));
+        }
+
+        public IDictionary<short, string> GetSizeNames()
+        {
+            return (from size in context.Size
+                    select new { size.Id, size.Name }).ToDictionary(t => t.Id, t => t.Name);
+        }
+
+        public IDictionary<short, string> GetCrustNames()
+        {
+            return (from crust in context.Crust
+                    select new { crust.Id, crust.Name }).ToDictionary(t => t.Id, t => t.Name);
+        }
+
+        public IDictionary<short, string> GetToppingNames()
+        {
+            return (from topping in context.Topping
+                    select new { topping.Id, topping.Name }).ToDictionary(t => t.Id, t => t.Name);
+        }
+
+        public void UpdatePizza(Logins login, int id, Pizza newPizza)
+        {
+            var pizza = _GetCurrentPizza(login, id);
+            pizza.CrustId = newPizza.Crust.Id;
+            pizza.Size = newPizza.Size.Id;
+            pizza.IncompleteToppings.Clear();
+            foreach(var tid in newPizza.Toppings.Select(t => t.Id).Distinct())
+            {
+                pizza.IncompleteToppings.Add(new IncompleteToppings() { Toppingid = tid, Amount = (byte)(from top in newPizza.Toppings where tid == top.Id select top).Count() });
+            }
+            context.SaveChanges();
         }
     }
 }

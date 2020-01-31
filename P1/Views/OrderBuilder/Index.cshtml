@@ -7,9 +7,6 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -63,14 +60,29 @@
     </tr>
     <tr>
         <td>
+            <select form="NewPizza" name="id">
+                @foreach (var item in ViewBag.PreBuilts)
+                {
+                    if (item.Key == 0)
+                    {
+                        <option selected value="@item.Key">@item.Value</option>
+                    }
+                    else { 
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
         </td>
         <td>
+            <form id="NewPizza" asp-action="Create" method="get">
+                <input type="submit" value="Add Pizza" class="btn btn-primary" />
+            </form>
         </td>
         <td>
         </td>
         <td>
             <form asp-action="Confirm">
-                <input type="submit" value="Confirm" class="btn" />
+                <input type="submit" value="Confirm" class="btn btn-primary" />
             </form>
         </td>
     </tr>
