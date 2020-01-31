@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Domain
 {
-    class CompletedPizza : IPizza
+    public class CompletedPizza : IPizza
     {
         public int Id { get; set; }
         public Crust Crust { get; set; }

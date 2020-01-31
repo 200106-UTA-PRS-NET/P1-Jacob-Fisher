@@ -38,7 +38,7 @@ namespace Domain
                 pizzas.Add(pizza);
             }
         }
-        internal Order(Store store)
+        public Order(Store store)
         {
             this.store = store;
             pizzas = new List<IPizza>();
