@@ -90,9 +90,11 @@ namespace P1.Controllers
                 _context.AddPizza(login, newPizza);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (InvalidOperationException e)
             {
-                return View();
+                TempData["ErrorString"] = e.Message;
+                TempData["ReturnString"] = "/Order/Builder/Index";
+                return Redirect("/Error");
             }
         }
 

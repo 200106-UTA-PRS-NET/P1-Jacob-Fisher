@@ -92,7 +92,7 @@ namespace Domain
         }
         public void NewOrder(int userId, int storeId)
         {
-            var lastOrder = PizzaMapper.Map(context.Orders.Where(o => o.Userid == userId).Select(o => o).OrderByDescending(o => o.Ordertime).FirstOrDefault());
+            var lastOrder = PizzaMapper.Map(context.Orders.Include(o=>o.Store).Where(o => o.Userid == userId).Select(o => o).OrderByDescending(o => o.Ordertime).FirstOrDefault());
             if (lastOrder != null)
             {
                 double timeDif = (DateTime.Now - lastOrder.Ordertime).TotalHours;
@@ -126,7 +126,7 @@ namespace Domain
 
         public Order CurrentOrderLazy(Logins login)
         {
-            return PizzaMapper.Map(context.Incomplete
+            return PizzaMapper.Map(context.Incomplete.Include(o=>o.Store)
                 .Where(o => o.Userid == login.Id).FirstOrDefault());
         }
 
@@ -152,6 +152,8 @@ namespace Domain
 
         public void AddPizza(Logins login, IPizza pizza)
         {
+            var currentOrder = CurrentOrder((User)login);
+            currentOrder.Add(pizza);
             context.IncompletePizza.Add(PizzaMapper.Map(pizza, login));
             context.SaveChanges();
         }
