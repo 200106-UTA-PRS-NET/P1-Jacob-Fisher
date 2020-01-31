@@ -50,7 +50,7 @@ namespace P1.Controllers
         {
             var uid = _mgr.GetUserId(this.User);
             var login = _context.GetLogins(uid);
-            _context.NewOrder(login.Id,id);
+            _context.NewOrder(login.Id, id);
             return Redirect("/Order/Builder/Index");
         }
     }

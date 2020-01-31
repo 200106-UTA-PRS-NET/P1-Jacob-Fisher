@@ -180,6 +180,29 @@ namespace Domain
             }
         }
 
+        internal static IncompletePizza Map(IPizza pizza, Logins login)
+        {
+            var retVar = new IncompletePizza()
+            {
+                Id = login.Id,
+                PizzaId = pizza.Id,
+                CrustId = pizza.Crust.Id,
+                Size = pizza.Size.Id,
+            };
+            foreach (var Id in (from topping in pizza.Toppings
+                                     select topping.Id).Distinct())
+            {
+                retVar.IncompleteToppings.Add(new IncompleteToppings()
+                {
+                    Amount = (byte)(from t in pizza.Toppings
+                                    where t.Id == Id
+                                    select t).Count(),
+                    Toppingid = Id,
+                });
+            }
+            return retVar;
+        }
+
         internal static IPizza Map(Domain.Models.Pizza pizza)
         {
             if (pizza == null)
@@ -265,14 +288,14 @@ namespace Domain
 
             };
             foreach(var topping in (from topping in pizza.Toppings
-                                   select topping).Distinct())
+                                   select topping.Id).Distinct())
             {
                 p.PizzaToppings.Add(new PizzaToppings()
                 {
                     Amount = (byte)(from t in pizza.Toppings
-                                    where t.Id == topping.Id
+                                    where t.Id == topping
                                     select t).Count(),
-                    ToppingId = topping.Id,
+                    ToppingId = topping,
                 });
             }
             return p;

@@ -243,7 +243,7 @@ namespace Domain.Models
                 entity.HasOne(d => d.IdNavigation)
                     .WithMany(p => p.IncompletePizza)
                     .HasForeignKey(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__IncompletePi__id__7132C993");
 
                 entity.HasOne(d => d.SizeNavigation)
@@ -279,7 +279,7 @@ namespace Domain.Models
                 entity.HasOne(d => d.IncompletePizza)
                     .WithMany(p => p.IncompleteToppings)
                     .HasForeignKey(d => new { d.Id, d.Pizzaid })
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK__IncompleteToppin__76EBA2E9");
             });
 

@@ -29,25 +29,41 @@ namespace P1.Controllers
         }
 
         // GET: OrderBuilder
-
         public ActionResult Index()
         {
             var uid = _mgr.GetUserId(this.User);
             var login = _context.GetLogins(uid);
-            Order order = _context.GetCurrentOrder(login);
+            Order order = _context.CurrentOrder((User)login);
             return View(new OrderBuilderView(order));
         }
 
         // GET: OrderBuilder/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var uid = _mgr.GetUserId(this.User);
+            var login = _context.GetLogins(uid);
+            IPizza p = _context.GetCurrentPizza(login, id);
+            var pizza = new PizzaView(p);
+            return View(pizza);
         }
 
         // GET: OrderBuilder/Create
         public ActionResult Create()
         {
-            return View();
+            var uid = _mgr.GetUserId(this.User);
+            var login = _context.GetLogins(uid);
+            var order = _context.CurrentOrderLazy(login);
+            Pizza pizza = new Pizza(order)
+            {
+                Crust = new Crust() { Id = 1 },
+                Size = new Size() { Id = 1}
+            };
+            pizza.AddTopping(new Topping() { Id = 1 });
+            pizza.AddTopping(new Topping() { Id = 2 });
+            pizza.AddTopping(new Topping() { Id = 1 });
+            _context.AddPizza(login, pizza);
+            return Redirect(nameof(Index));
+            //return View();
         }
 
         // POST: OrderBuilder/Create
@@ -93,7 +109,11 @@ namespace P1.Controllers
         // GET: OrderBuilder/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var uid = _mgr.GetUserId(this.User);
+            var login = _context.GetLogins(uid);
+            IPizza p = _context.GetCurrentPizza(login, id);
+            var pizza = new PizzaView(p);
+            return View(pizza);
         }
 
         // POST: OrderBuilder/Delete/5
@@ -103,13 +123,30 @@ namespace P1.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
+                var uid = _mgr.GetUserId(this.User);
+                var login = _context.GetLogins(uid);
+                _context.RemovePizzaFromOrder(login, id);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Confirm(IFormCollection collection)
+        {
+            try
+            {
+                var uid = _mgr.GetUserId(this.User);
+                var login = _context.GetLogins(uid);
+                _context.ConfirmOrder((User)login);
+                return Redirect("/Home/Index");
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
             }
         }
     }

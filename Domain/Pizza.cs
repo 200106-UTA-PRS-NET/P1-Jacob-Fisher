@@ -51,11 +51,11 @@ namespace Domain
             this.order = order;
             Crust = new Crust()
             {
-                Name = "Regular"
+                Id = 1
             };
             Size = new Size()
             {
-                Name = "Medium"
+                Id = 1
             };
             toppings = new List<Topping>();
         }
