@@ -92,6 +92,19 @@ namespace Domain
         }
         public void NewOrder(int userId, int storeId)
         {
+            var lastOrder = PizzaMapper.Map(context.Orders.Where(o => o.Userid == userId).Select(o => o).OrderByDescending(o => o.Ordertime).FirstOrDefault());
+            if (lastOrder != null)
+            {
+                double timeDif = (DateTime.Now - lastOrder.Ordertime).TotalHours;
+                if (timeDif < 2)
+                {
+                    throw new InvalidOperationException("You cannot order more frequently than once/2hrs.");
+                }
+                else if (timeDif < 24 && storeId != lastOrder.Store.Id)
+                {
+                    throw new InvalidOperationException("You cannot order from different stores in a 24hr window.");
+                }
+            }
             CancelOrder(userId);
             context.Incomplete.Add(new Incomplete() {
                 Userid = userId,

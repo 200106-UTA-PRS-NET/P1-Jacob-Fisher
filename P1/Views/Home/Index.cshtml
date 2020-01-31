@@ -13,7 +13,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th></th>
+            @if (!User.IsInRole("Store")) { 
+                <th></th>
+                }
         </tr>
     </thead>
     <tbody>
@@ -22,13 +24,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>
-                @Html.ActionLink("Order", "New", "Order", new { id = item.Id })
-                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-                @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
-                @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
-            </td>
-        </tr>
+            @if (!User.IsInRole("Store"))
+            {
+                <td>
+                    @Html.ActionLink("Order", "New", "Order", new { id = item.Id })
+                </td>
+            }
+            </tr>
 }
     </tbody>
 </table>
