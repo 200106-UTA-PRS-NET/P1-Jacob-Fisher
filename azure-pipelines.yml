@@ -39,4 +39,3 @@ steps:
     --no-build
     --results-directory $(Build.ArtifactStagingDirectory)/test/
     /p:CollectCoverage=true
-displayName: 'dotnet test'
