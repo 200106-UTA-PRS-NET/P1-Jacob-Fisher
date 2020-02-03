@@ -13,7 +13,7 @@ using P1.Models;
 
 namespace P1.Controllers
 {
-    [Route("Order/Builder/[action]")]
+    [Route("Order/Builder/{action=Index}")]
     [Authorize(Roles = "User")]
     public class OrderBuilderController : Controller
     {

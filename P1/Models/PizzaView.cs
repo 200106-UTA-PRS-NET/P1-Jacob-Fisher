@@ -15,7 +15,7 @@ namespace P1.Models
         {
             _pizza = pizza;
         }
-        public int Id { get => _pizza.Id; }
+        public int Id => _pizza.Id;
         public string Size { get => _pizza.Size.Name; }
         public string Crust { get => _pizza.Crust.Name; }
         public string Toppings { get => String.Join(", ", from t in _pizza.Toppings select t.Name); }
