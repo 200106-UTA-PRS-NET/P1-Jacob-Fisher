@@ -28,9 +28,9 @@ steps:
     scannerMode: 'MSBuild'
     projectKey: 'sonar.jacobdf'
     extraProperties:
+        sonar.exclusions=**/wwwroot/lib/**/*
         sonar.cs.opencover.reportPaths="$(Build.ArtifactStagingDirectory)/coverage/*"
         sonar.cs.vstest.reportPaths="$(Build.ArtifactStagingDirectory)/test/*.trx"
-        sonar.exclusions=**/wwwroot/lib/**/*
 
 - task: VSBuild@1
   inputs:
