@@ -39,3 +39,7 @@ steps:
     --no-build
     --results-directory $(Build.ArtifactStagingDirectory)/test/
     /p:CollectCoverage=true
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
