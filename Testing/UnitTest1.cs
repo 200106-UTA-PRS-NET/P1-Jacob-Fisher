@@ -75,7 +75,7 @@ namespace Testing
         public void AtLeastOneStore()
         {
             var repo = GetRepository(GetContext());
-            if (repo != null)
+            if (repo == null)
             {
                 return;
             }
