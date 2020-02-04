@@ -50,6 +50,7 @@ steps:
     --no-build
     --results-directory $(Build.ArtifactStagingDirectory)/test/
     /p:CollectCoverage=true
+    /p:CoverletOutputFormat=opencover
     /p:CoverletOutput="$(Build.ArtifactStagingDirectory)/coverage/"
 
 - task: DotNetCoreCLI@2
