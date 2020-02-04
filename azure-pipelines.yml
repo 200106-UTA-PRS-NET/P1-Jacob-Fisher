@@ -21,6 +21,17 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Sonar Cloud Connection'
+    organization: 'jacobdf'
+    scannerMode: 'MSBuild'
+    projectKey: 'sonar.jacobdf'
+    extraProperties: |
+        sonar.exclusions=**/wwwroot/lib/**/*
+        sonar.cs.opencover.reportsPaths="$(Build.ArtifactStagingDirectory)/coverage/*"
+        sonar.cs.vstest.reportsPaths="$(Build.ArtifactStagingDirectory)/test/*.trx"
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -39,3 +50,30 @@ steps:
     --no-build
     --results-directory $(Build.ArtifactStagingDirectory)/test/
     /p:CollectCoverage=true
+    /p:CoverletOutputFormat=opencover
+    /p:CoverletOutput="$(Build.ArtifactStagingDirectory)/coverage/"
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+
+- task: SonarCloudAnalyze@1
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(buildConfiguration)'
+    zipAfterPublish: true
+  displayName: 'DotNet publish + zip'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(54320e88-cfc4-4aec-90cf-a5c188c75dd0)'
+    appType: 'webAppLinux'
+    WebAppName: 'jacobdf'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
