@@ -21,6 +21,13 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: SonarCloudPrepare@1
+  inputs:
+    SonarCloud: 'Sonar Cloud Connection'
+    organization: 'jacobdf'
+    scannerMode: 'MSBuild'
+    projectKey: 'sonar.jacobdf'
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -43,4 +50,8 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
-    arguments: '/p:CollectCoverage=true'
+
+- task: SonarCloudAnalyze@1
+- task: SonarCloudPublish@1
+  inputs:
+    pollingTimeoutSec: '300'
