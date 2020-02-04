@@ -32,6 +32,10 @@ namespace Testing
         }
         PizzaRepository GetRepository(PizzaDbContext context)
         {
+            if(context == null)
+            {
+                return null;
+            }
             return new PizzaRepository(context);
         }
         [Fact]
@@ -71,7 +75,7 @@ namespace Testing
         public void AtLeastOneStore()
         {
             var repo = GetRepository(GetContext());
-            if (repo == null)
+            if (repo != null)
             {
                 return;
             }
