@@ -29,8 +29,8 @@ steps:
     projectKey: 'sonar.jacobdf'
     extraProperties: |
         sonar.exclusions=**/wwwroot/lib/**/*
-        sonar.cs.opencover.reportPaths="$(Build.ArtifactStagingDirectory)/coverage/*"
-        sonar.cs.vstest.reportPaths="$(Build.ArtifactStagingDirectory)/test/*.trx"
+        sonar.cs.opencover.reportsPaths="$(Build.ArtifactStagingDirectory)/coverage/*"
+        sonar.cs.vstest.reportsPaths="$(Build.ArtifactStagingDirectory)/test/*.trx"
 
 - task: VSBuild@1
   inputs:
@@ -50,6 +50,7 @@ steps:
     --no-build
     --results-directory $(Build.ArtifactStagingDirectory)/test/
     /p:CollectCoverage=true
+    /p:CoverletOutput="$(Build.ArtifactStagingDirectory)/coverage/"
 
 - task: DotNetCoreCLI@2
   inputs:
