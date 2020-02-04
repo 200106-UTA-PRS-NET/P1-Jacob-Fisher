@@ -61,3 +61,19 @@ steps:
 - task: SonarCloudPublish@1
   inputs:
     pollingTimeoutSec: '300'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    arguments: '--configuration $(buildConfiguration)'
+    zipAfterPublish: true
+  displayName: 'DotNet publish + zip'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription 1(54320e88-cfc4-4aec-90cf-a5c188c75dd0)'
+    appType: 'webAppLinux'
+    WebAppName: 'jacobdf'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
