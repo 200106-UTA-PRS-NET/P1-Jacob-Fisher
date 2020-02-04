@@ -26,6 +26,7 @@ namespace P1
             NLog.LogManager.Configuration = config;
 
             NLog.Logger _log_ = NLog.LogManager.GetCurrentClassLogger();
+            _log_.Debug("Logger Running");
 
             try
             {
@@ -35,6 +36,7 @@ namespace P1
             {
                 _log_.Fatal(e.Message);
                 _log_.Fatal(e.StackTrace);
+                throw;
             }
         }
 
