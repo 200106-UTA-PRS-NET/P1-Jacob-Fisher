@@ -70,6 +70,8 @@ steps:
     zipAfterPublish: true
   displayName: 'DotNet publish + zip'
 
+- script: dir $(System.DefaultWorkingDirectory)
+
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
